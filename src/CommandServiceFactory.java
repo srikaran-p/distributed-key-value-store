@@ -13,6 +13,7 @@ public class CommandServiceFactory {
         commandServiceMap.put(Command.DELETE, new DeleteCommandService(storageEngine));
         commandServiceMap.put(Command.EXISTS, new ExistsCommandService(storageEngine));
         commandServiceMap.put(Command.PING, new PingCommandService());
+        commandServiceMap.put(Command.SAVE, new SaveCommandService(storageEngine));
     }
 
     public CommandService getCommandService(Command command) {

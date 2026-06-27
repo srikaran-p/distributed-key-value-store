@@ -1,5 +1,7 @@
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -8,11 +10,13 @@ public class PersistentStorage implements StorageEngine {
 
     private final ConcurrentHashMap<String, String> store;
     private final WriteAheadLog writeAheadLog;
+    private final SnapshotService snapshotService;
     private final Lock lock;
 
     public PersistentStorage() {
         this.store = new ConcurrentHashMap<>();
         this.writeAheadLog = new WriteAheadLog();
+        this.snapshotService = new SnapshotService();
         lock = new ReentrantLock();
         try {
             loadDataToStore();
@@ -60,7 +64,32 @@ public class PersistentStorage implements StorageEngine {
         return store.containsKey(key);
     }
 
+    @Override
+    public void snapshot() {
+        Map<String, String> snapshot = new HashMap<>();
+        try {
+            lock.lock();
+            snapshot = new HashMap<>(store);
+            snapshotService.save(snapshot);
+            writeAheadLog.clear();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            lock.unlock();
+        }
+    }
+
     private void loadDataToStore() throws IOException {
+        final Map<String, String> snapshotData = snapshotService.load();
+        try {
+            lock.lock();
+            store.putAll(snapshotData);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            lock.unlock();
+        }
+
         final List<LogEntry> logEntries = writeAheadLog.loadEntries();
         if (logEntries.isEmpty()) {
             return;

@@ -8,7 +8,8 @@ public enum Command {
     SET("SET"),
     PING("PING"),
     DELETE("DEL"),
-    EXISTS("EXISTS");
+    EXISTS("EXISTS"),
+    SAVE("SAVE");
 
     private static Map<String, Command> LABEL_TO_COMMAND;
 

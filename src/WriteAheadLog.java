@@ -19,6 +19,10 @@ public class WriteAheadLog {
         Files.writeString(LOG_FILE, "DEL " + key + System.lineSeparator(), StandardOpenOption.APPEND);
     }
 
+    public void clear() throws IOException {
+        Files.newBufferedWriter(LOG_FILE).close();
+    }
+
     public List<LogEntry> loadEntries() throws IOException {
         if (Files.notExists(LOG_FILE)) {
             Files.createFile(LOG_FILE);

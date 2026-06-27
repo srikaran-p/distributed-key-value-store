@@ -7,4 +7,6 @@ public interface StorageEngine {
     String delete(String key);
 
     boolean exists(String key);
+
+    void snapshot();
 }

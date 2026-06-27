@@ -27,4 +27,9 @@ public class MemoryStorage implements StorageEngine {
     public boolean exists(String key) {
         return store.containsKey(key);
     }
+
+    @Override
+    public void snapshot() {
+        throw new UnsupportedOperationException("Cannot take snapshot for Memory Storages");
+    }
 }
