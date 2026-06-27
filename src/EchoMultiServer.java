@@ -12,7 +12,7 @@ public class EchoMultiServer {
 
     public void start(int port) throws IOException {
         serverSocket = new ServerSocket(port);
-        final MemoryStorage memoryStorage = new MemoryStorage();
+        final StorageEngine memoryStorage = new PersistentStorage();
         final CommandServiceFactory commandServiceFactory = new CommandServiceFactory(memoryStorage);
 
         while (true) {
