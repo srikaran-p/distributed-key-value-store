@@ -29,7 +29,7 @@ public class PersistentStorage implements StorageEngine {
     public void set(String key, String value) {
         try {
             lock.lock();
-            writeAheadLog.appendSet(key, value);
+            writeAheadLog.append(new LogEntry(Command.SET, key, value));
             store.put(key, value);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -48,7 +48,7 @@ public class PersistentStorage implements StorageEngine {
         String value;
         try {
             lock.lock();
-            writeAheadLog.appendDelete(key);
+            writeAheadLog.append(new LogEntry(Command.DELETE, key));
             value = store.remove(key);
         } catch (IOException e) {
             throw new RuntimeException(e);

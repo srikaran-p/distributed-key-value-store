@@ -11,12 +11,14 @@ public class WriteAheadLog {
 
     private static final Path LOG_FILE = Path.of("./database.txt");
 
-    public void appendSet(String key, String value) throws IOException {
-        Files.writeString(LOG_FILE, "SET " + key + " " + value + System.lineSeparator(), StandardOpenOption.APPEND);
-    }
+    public void append(LogEntry entry) throws IOException {
+        if (entry == null || entry.getCommand() == null) {
+            return;
+        }
 
-    public void appendDelete(String key) throws IOException {
-        Files.writeString(LOG_FILE, "DEL " + key + System.lineSeparator(), StandardOpenOption.APPEND);
+        final String command = entry.getCommand().getCommandLabel();
+        final String key = entry.getKey();
+        Files.writeString(LOG_FILE, command + " " + key + System.lineSeparator(), StandardOpenOption.APPEND);
     }
 
     public void clear() throws IOException {
