@@ -5,7 +5,7 @@ public class LogEntry {
     private String value;
 
     public LogEntry(Command command, String key) {
-        new LogEntry(command, key, null);
+        this(command, key, null);
     }
 
     public LogEntry(Command command, String key, String value) {

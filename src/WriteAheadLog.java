@@ -18,7 +18,12 @@ public class WriteAheadLog {
 
         final String command = entry.getCommand().getCommandLabel();
         final String key = entry.getKey();
-        Files.writeString(LOG_FILE, command + " " + key + System.lineSeparator(), StandardOpenOption.APPEND);
+        final String value = entry.getValue();
+        if (value == null) {
+            Files.writeString(LOG_FILE, command + " " + key + System.lineSeparator(), StandardOpenOption.APPEND);
+        } else {
+            Files.writeString(LOG_FILE, command + " " + key + " " + value + System.lineSeparator(), StandardOpenOption.APPEND);
+        }
     }
 
     public void clear() throws IOException {
